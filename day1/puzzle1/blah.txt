@@ -1,0 +1,18 @@
+Filepath: MyStr.roc, MainPath: None
+Filename: MyStr.roc
+Header imports: None
+platform_data: false, root_id: MyStr, module_id: Box, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Bool, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Result, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Num, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Encode, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: List, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Task, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Decode, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Str, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Hash, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Inspect, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Dict, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: Set, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+platform_data: false, root_id: MyStr, module_id: MyStr, root_type: Module { main_path: Some("/Users/anthonybullard/Development/repro-roc-issue-7175/main.roc") }
+is_root_module: true

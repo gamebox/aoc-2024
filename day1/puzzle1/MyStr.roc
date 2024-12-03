@@ -1,0 +1,4 @@
+module [MyStr]
+
+MyStr : Str
+
