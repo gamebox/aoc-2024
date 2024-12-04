@@ -38,6 +38,7 @@ OpState : [
     Disabled,
 ]
 
+handleChar : (List Mul, ParseState, OpState), U8 -> (List Mul, ParseState, OpState)
 handleChar = \(muls, state, opState), char ->
     when (state, char, opState) is
         (LookingForOpStart, 'm', s) ->
@@ -58,7 +59,7 @@ handleChar = \(muls, state, opState), char ->
         (BuildingDoOrDontStartDO, d, s) if d == 40 ->
             (muls, ExpectingDoClose, s)
 
-        (ExpectingDoClose, d, s) if d == 41 ->
+        (ExpectingDoClose, d, _) if d == 41 ->
             (muls, LookingForOpStart, Enabled)
 
         (BuildingDoOrDontStartDO, d, s) if d == 'n' ->
@@ -73,7 +74,7 @@ handleChar = \(muls, state, opState), char ->
         (ExpectingDontOpen, d, s) if d == 40 ->
             (muls, ExpectingDontClose, s)
 
-        (ExpectingDontClose, d, s) if d == 41 ->
+        (ExpectingDontClose, d, _) if d == 41 ->
             (muls, LookingForOpStart, Disabled)
 
         (ExpectingMulOpen, d, s) if d == 40 ->
