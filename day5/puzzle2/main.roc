@@ -72,11 +72,15 @@ determineInvalidUpdate = \ruleMap -> \update ->
 
 pageSortByRules : RuleMap -> (U64, U64 -> _)
 pageSortByRules = \ruleMap -> \a, b ->
+    afters : List U64
     afters = 
         Dict.get ruleMap b 
         |> Result.withDefault []
 
-    if List.contains afters a then
+    contains : Bool
+    contains = List.contains afters a
+
+    if contains then
         LT
     else
         EQ
