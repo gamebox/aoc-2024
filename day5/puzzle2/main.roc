@@ -25,16 +25,16 @@ processInput = \str ->
     rules =
         Str.splitOn rulesStr "\n"
         |> List.map \s ->
-            { before: first, after: second } =
+            { before, after } =
                 Str.splitFirst s "|"
                 |> Result.withDefault { before: "", after: "" }
-
-            (
-                Str.toU64 first
-                |> Result.withDefault 99999999,
-                Str.toU64 second
-                |> Result.withDefault 99999999,
-            )
+            first =
+                Str.toU64 before
+                |> Result.withDefault 99999999
+            second =
+                Str.toU64 after
+                |> Result.withDefault 99999999
+            (first, second)
 
     ruleMap =
         List.walk rules (Dict.withCapacity (List.len rules)) \dict, (before, after) ->
@@ -62,51 +62,49 @@ determinePageNotInOrder = \ruleMap, update -> \_, pageNo, index ->
         before = List.takeFirst update index
         someBad = List.any before \num -> List.contains afters num
         if someBad then
-            Continue Bool.true
+            Break Bool.true
         else
-            Break Bool.false
+            Continue Bool.false
 
 determineInvalidUpdate : RuleMap -> (Update -> Bool)
 determineInvalidUpdate = \ruleMap -> \update ->
         List.walkWithIndexUntil update Bool.false (determinePageNotInOrder ruleMap update)
 
-pageSortByRules : RuleMap -> (U64, U64 -> _)
-pageSortByRules = \ruleMap -> \a, b ->
-    afters : List U64
-    afters = 
-        Dict.get ruleMap b 
-        |> Result.withDefault []
-
-    contains : Bool
-    contains = List.contains afters a
-
-    if contains then
-        LT
-    else
-        EQ
-
-
-fixUpdate : RuleMap -> (Update -> Update)
-fixUpdate = \ruleMap -> \update ->
-    List.sortWith update (pageSortByRules ruleMap)
-
 fixUpdates : RuleMap, List Update -> List Update
 fixUpdates = \ruleMap, updates ->
-    List.map updates (fixUpdate ruleMap)
+    List.map updates \update ->
+        List.sortWith update \a, b ->
+            afters =
+                Dict.get ruleMap b
+                |> Result.withDefault []
+
+            contains = List.contains afters a
+
+            if contains then
+                GT
+            else
+                EQ
+
+sumMiddles : U64, Update -> U64
+sumMiddles = \total, update ->
+    len = List.len update
+    curr =
+        if len == 0 then
+            0
+        else
+            middleIndex = (Num.divCeil len 2) - 1
+            List.get update middleIndex
+            |> Result.withDefault 0
+    total + curr
 
 calculateMiddleTotal : RuleMap, List Update -> U64
 calculateMiddleTotal = \ruleMap, updates ->
+    invalidUpdates : List Update
     invalidUpdates = List.keepIf updates (determineInvalidUpdate ruleMap)
+    fixed : List Update
     fixed = fixUpdates ruleMap invalidUpdates
-    List.walk fixed 0 \total, update ->
-        len = List.len update
-        curr =
-            if len == 0 then
-                0
-            else
-                List.get update ((Num.divCeil (List.len update) 2) - 1)
-                |> Result.withDefault 0
-        total + curr
+    dbg {invalidUpdates, fixed}
+    List.walk fixed 0 sumMiddles
 
 expect
     testDataStr =
