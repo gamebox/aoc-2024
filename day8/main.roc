@@ -3,6 +3,7 @@ app [main] {
 }
 
 import pl.Stdout
+import pl.Utc
 import "input.txt" as realInput : Str
 import PartOne
 
@@ -17,9 +18,19 @@ getPart2Total = \str ->
     |> Set.len
 
 main =
+    now = Utc.now! {}
+    p1Start = Utc.toNanosSinceEpoch now
     total = getTotal realInput
+    p1End =
+        Utc.now! {}
+        |> Utc.toNanosSinceEpoch
     part2 = getPart2Total realInput
-    Stdout.line! "There are $(Num.toStr total) obstacles, and $(Num.toStr part2) with harmonics"
+    p2End =
+        Utc.now! {}
+        |> Utc.toNanosSinceEpoch
+    Stdout.line! "There are $(Num.toStr total) obstacles, and $(Num.toStr part2) with harmonics."
+    Stdout.line! "Part 1: $(Num.toStr (p1End - p1Start))ns"
+    Stdout.line! "Part 2: $(Num.toStr (p2End - p1End))ns"
 
 expect
     input =
@@ -40,7 +51,6 @@ expect
     actual = getTotal input
     actual2 = getPart2Total input
     actual == 14 && actual2 == 34
-
 
 # ##....#....#
 # .#.#....0...
