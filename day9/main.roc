@@ -12,11 +12,13 @@ get_part_one = |str|
     PartOne.process_input(str)
     |> PartOne.compact
     |> PartOne.checksum
+end
 
 get_part_two = |str|
     PartTwo.process_input(str)
     |> PartTwo.compact
     |> PartTwo.checksum
+end
 
 main = |_|
     p1_start = Utc.now!().to_nanos_since_epoch()
@@ -26,13 +28,16 @@ main = |_|
     p2_end = Utc.now!().to_nanos_since_epoch()
     Stdout.line! "Part 1: $(part_one.to_str()) [$((p1_end - p1_start).toStr())ns]"
     Stdout.line! "Part 2: $(part_two.to_str()) [$((p2_end - p1_end).toStr())ns]"
+end
 
 expect
     input = "2333133121414131402"
     actual = get_part_one(input)
     actual == 1928
+end
 
 expect
     input = "2333133121414131402"
     actual = get_part_two(input)
     actual == 2858
+end

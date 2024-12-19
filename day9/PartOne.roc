@@ -16,26 +16,31 @@ num_from_byte_or_crash = |byte|
             when s.to_u64() is
                 Ok(n) -> n
                 _ -> crash "Could not convert number to U64"
+            end
         _ -> crash "Could not convert $(Inspect.toStr(byte)) to a string"
+    end
+end
 
 process_input : Str -> List(Block)
-process_input = |str| ->
+process_input = |str|
     bytes = str.trim().to_utf8()
     blocks = List.with_capacity(bytes.len())
-    bytes.walk_with_index(
-        blocks, 
-        |bs, byte, index|
-            byte_value = num_from_byte_or_crash(byte)
-            if index.is_even() then
-                bs.append(File(index // 2, byte_value))
-            else 
-                bs.append(Free(byte_value))
-    )
+    bytes.walk_with_index(blocks, |bs, byte, index|
+        byte_value = num_from_byte_or_crash(byte)
+        if index.is_even() then
+            bs.append(File(index // 2, byte_value))
+        else 
+            bs.append(Free(byte_value))
+        end
+    end)
+end
 
-block_is_free = |block| ->
+block_is_free = |block|
     when block is
         Free(_) -> Bool.true
         _ -> Bool.false
+    end
+end
 
 compact : List(Block) -> List(Block)
 compact = |blocks| compact_help(blocks, [], 0)
@@ -44,6 +49,8 @@ add_one_to_free = |sum, b|
     when b is
         Free(s) -> sum + s
         _ -> sum
+    end
+end
 
 compact_help = |blocks, compacted, freed|
     if blocks.isEmpty() then
@@ -55,7 +62,9 @@ compact_help = |blocks, compacted, freed|
                     Continue((acc.append(b), free_result))
                 else
                     Break((acc, Ok(b)))
-            )
+                end
+            end)
+
         when front_result is
             (next_files, Ok(Free(free_size))) ->
                 new_blocks = blocks.dropFirst(next_files.len())
@@ -112,25 +121,34 @@ compact_help = |blocks, compacted, freed|
                                 nc = new_compacted.append(newCompacted, nfstay)
 
                                 compact_help(nb, nc, freed + free_size)
+                            end
 
                         Err(_) -> new_compacted.append(Free(freed))
                         Ok(Free(_)) -> crash "Got a Free when expecting a file"
+                    end
+                end
 
             (next_files, Err(_)) ->
                 compacted.concat(next_files).append(Free(freed))
             (next_files, Ok(_)) -> crash("Got a File when expecting a free")
+        end
+    end
+end
 
 displayCompacted = |blocks|
     blocks.map(|b|
         when b is
             File(id, size) -> id.to_str().repeat(size.to_u64())
             Free(size) -> ".".repeat(size.to_u64())
-    ).pass_to(Str.joinWith(""))
+        end
+    end).pass_to(Str.joinWith(""))
+end
 
 checksum : List(Block) -> U64
 checksum = |blocks|
     var sum_ = 0
     var index_ = 0
+
     for block in blocks do
         when block is
             File(id, sz) ->
@@ -141,7 +159,11 @@ checksum = |blocks|
 
             Free size ->
                 index_ = index_ + size.to_u64()
+        end
+    end
+
     sum_
+end
 
 # got
 # 009981118882777333644655556
